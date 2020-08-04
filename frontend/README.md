@@ -7,5 +7,5 @@ make fe_install
 
 ### Run app:
 `
-fe_dev_up
+make fe_dev_up
 `
