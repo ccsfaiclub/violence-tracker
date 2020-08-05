@@ -1,11 +1,9 @@
-import React, { Component, Fragment } from 'react';
-// import axios from 'axios';
-
+import React from 'react';
 import './App.css';
 import { Header } from "./components/Header";
-import { ViolenceMap } from "./components/ViolenceMap";
 import { Search } from "./components/Search";
 import { Stats } from "./components/Stats";
+import {ViolenceApp} from "./components/ViolenceApp";
 
 
 function App() {
@@ -13,7 +11,8 @@ function App() {
   return (
     <div className="App">
         <Header/>
-        <ViolenceMap/>
+        <ViolenceApp/>
+        {/*ViolenceApp calls ViolenceMap*/}
         <Search/>
         <Stats/>
     </div>
