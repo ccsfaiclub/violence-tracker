@@ -7,8 +7,9 @@ from backend import schema
 from backend.schema import Incident, Query
 from backend.app import create_app
 from backend.extensions import db
-from backend.model import Incident
+from backend.model import Incident, Location
 from typing import List, Dict
+import requests
 
 
 def main():
@@ -20,6 +21,8 @@ def main():
         write_to_db()
 
         run_query(query)
+
+        geocode_cities()
 
 
 def get_data(json_file: str) -> List[Dict]:
@@ -41,6 +44,7 @@ def write_to_db():
     """
     data = get_data('../police-brutality-data.json')
     for i in range(3):
+        id = data[i]['id']
         links = data[i]['links']
         state = data[i]['state']
         city = data[i]['city']
@@ -50,7 +54,8 @@ def write_to_db():
         date = data[i]['date']
         date_text = data[i]['date_text']
 
-        incident = Incident(links=links,
+        incident = Incident(id=id,
+                            links=links,
                             state=state,
                             city=city,
                             description=description,
@@ -129,6 +134,38 @@ def run_query(query: str):
        }
     }
     '''
+
+
+def geocode_cities():
+    """
+    Fetches all incidences loaded into the postgres db.
+    Loops through all incidences and geocodes each location to get a lat, long.
+    Populates the locations table with lat longs
+    :return: None
+    """
+    incidences = db.session.query(Incident).all()
+
+    for incident in incidences:
+        incident_id = incident.id
+        city = incident.city.lower().replace(' ', '+')
+        state = incident.state.lower().replace(' ', '+')
+
+        # Filter incidents without location data
+        if 'unknown' not in state:
+
+            # TODO write this as an internal endpoint rather than use requests to make the call
+            query = f'https://nominatim.openstreetmap.org/search?city={city}&state={state}&format=json'
+            reponse = requests.get(query)
+            if reponse.status_code == 200:
+                data = json.loads(reponse.text)
+                lat = data[0]['lat']
+                lon = data[0]['lon']
+
+                location = Location(incident_id=incident_id,
+                                    lat=lat,
+                                    lon=lon)
+                db.session.add(location)
+    db.session.commit()
 
 
 if __name__ == "__main__":
