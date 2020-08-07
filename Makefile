@@ -7,6 +7,8 @@ docker_up:
 docker_down:
 	docker-compose down --volumes
 
+docker_reset: docker_down docker_up
+
 fe_install:
 	cd frontend && npm install
 
