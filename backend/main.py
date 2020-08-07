@@ -1,15 +1,15 @@
 import json
 
 import graphene
-from flask_graphql import GraphQLView
+from sqlalchemy import and_
 
-from backend import schema
-from backend.schema import Incident, Query
 from backend.app import create_app
 from backend.extensions import db
-from backend.model import Incident, Location
-from typing import List, Dict
+from typing import List, Dict, Optional
 import requests
+
+from backend.model import Incident, Location
+from backend.schema import Query
 
 
 def main():
@@ -20,9 +20,9 @@ def main():
 
         write_to_db()
 
-        run_query(query)
-
         geocode_cities()
+
+        run_query(query)
 
 
 def get_data(json_file: str) -> List[Dict]:
@@ -43,7 +43,7 @@ def write_to_db():
     Note: For now, loop only adds 3 incidents; we can change this to include all incidents later
     """
     data = get_data('../police-brutality-data.json')
-    for i in range(3):
+    for i in range(10):
         id = data[i]['id']
         links = data[i]['links']
         state = data[i]['state']
@@ -54,7 +54,7 @@ def write_to_db():
         date = data[i]['date']
         date_text = data[i]['date_text']
 
-        incident = Incident(id=id,
+        incident = Incident(external_id=id,
                             links=links,
                             state=state,
                             city=city,
@@ -65,6 +65,52 @@ def write_to_db():
                             date_text=date_text)
 
         db.session.add(incident)
+    db.session.commit()
+
+
+def get_location(city: str, state: str) -> Optional[Location]:
+    """
+    Looks up a location in the db by city and state.
+    If the location exists, then we already have the lat, long.
+    Otherwise, make a request to fetch the lat, long.
+    """
+    # Look up location if it exists already
+    location = db.session.query(Location).filter(and_(
+        Location.city == city,
+        Location.state == state
+    )).one_or_none()
+    if location:
+        return location
+
+    # TODO write this as an internal endpoint rather than use requests to make the call
+    query = f'https://nominatim.openstreetmap.org/search?city={city}&state={state}&format=json'
+    response = requests.get(query)
+    if response.status_code == 200:
+        data = json.loads(response.text)
+        lat = data[0]['lat']
+        lon = data[0]['lon']
+        location = Location(city=city, state=state, lat=lat, lon=lon)
+        db.session.add(location)
+        return location
+    else:
+        return None
+
+
+def geocode_cities():
+    """
+    Fetches all incidences loaded into the postgres db.
+    Loops through all incidences and geocodes each location to get a lat, long.
+    Populates the locations table with lat longs
+    :return: None
+    """
+    # Loop through every incident using cursor (instead of loading all into memory)
+    for incident in db.session.query(Incident):
+        # incident_id = incident.id
+        city = incident.city.lower().replace(' ', '+')
+        state = incident.state.lower().replace(' ', '+')
+
+        if city and state:
+            incident.location = get_location(city, state)
     db.session.commit()
 
 
@@ -79,7 +125,8 @@ query = '''
                 tags,
                 name,
                 date,
-                dateText
+                dateText,
+                locationId
             }
         }
         '''
@@ -94,6 +141,7 @@ def run_query(query: str):
     print(result)
     '''
     SAMPLE OUTPUT 
+    Formatted JSON Data
     {
        "data":{
           "incidents":[
@@ -106,18 +154,8 @@ def run_query(query: str):
                 "tags":"[\"arrest\", \"shove\", \"knee\", \"protestor\"]",
                 "name":"Police arrest protestors leaving scene",
                 "date":"2020-05-31",
-                "dateText":"May 31st"
-             },
-             {
-                "id":"2",
-                "links":"[{\"url\": \"https://twitter.com/ChrisDunkerLJS/status/1268938853945167873\", \"text\": \"\"}, {\"url\": \"https://twitter.com/ChrisDunkerLJS/status/1268981851164684290\", \"text\": \"\"}]",
-                "state":"Nebraska",
-                "city":"Lincoln",
-                "description":"A reporter posted a picture of a tear gas canister, allegedly used in Lincoln protests. In the tweet, he states he and his photographer were tear gassed twice by police.",
-                "tags":"[\"journalist\", \"tear-gas\", \"tear-gas-canister\"]",
-                "name":"Reporter shows tear gas canister fired at him by police",
-                "date":"2020-05-31",
-                "dateText":"May 31st"
+                "dateText":"May 31st",
+                "locationId":1
              },
              {
                 "id":"3",
@@ -128,44 +166,25 @@ def run_query(query: str):
                 "tags":"[\"mace\", \"spray\", \"pepper-balls\", \"protestor\"]",
                 "name":"Police Mace, shoot pepper bullets at protesters sitting on the ground",
                 "date":"2020-05-31",
-                "dateText":"May 31st"
-             }
+                "dateText":"May 31st",
+                "locationId":2
+             },
+             {
+                "id":"2",
+                "links":"[{\"url\": \"https://twitter.com/ChrisDunkerLJS/status/1268938853945167873\", \"text\": \"\"}, {\"url\": \"https://twitter.com/ChrisDunkerLJS/status/1268981851164684290\", \"text\": \"\"}]",
+                "state":"Nebraska",
+                "city":"Lincoln",
+                "description":"A reporter posted a picture of a tear gas canister, allegedly used in Lincoln protests. In the tweet, he states he and his photographer were tear gassed twice by police.",
+                "tags":"[\"journalist\", \"tear-gas\", \"tear-gas-canister\"]",
+                "name":"Reporter shows tear gas canister fired at him by police",
+                "date":"2020-05-31",
+                "dateText":"May 31st",
+                "locationId":1
+             },
           ]
        }
     }
     '''
-
-
-def geocode_cities():
-    """
-    Fetches all incidences loaded into the postgres db.
-    Loops through all incidences and geocodes each location to get a lat, long.
-    Populates the locations table with lat longs
-    :return: None
-    """
-    incidences = db.session.query(Incident).all()
-
-    for incident in incidences:
-        incident_id = incident.id
-        city = incident.city.lower().replace(' ', '+')
-        state = incident.state.lower().replace(' ', '+')
-
-        # Filter incidents without location data
-        if 'unknown' not in state:
-
-            # TODO write this as an internal endpoint rather than use requests to make the call
-            query = f'https://nominatim.openstreetmap.org/search?city={city}&state={state}&format=json'
-            reponse = requests.get(query)
-            if reponse.status_code == 200:
-                data = json.loads(reponse.text)
-                lat = data[0]['lat']
-                lon = data[0]['lon']
-
-                location = Location(incident_id=incident_id,
-                                    lat=lat,
-                                    lon=lon)
-                db.session.add(location)
-    db.session.commit()
 
 
 if __name__ == "__main__":
