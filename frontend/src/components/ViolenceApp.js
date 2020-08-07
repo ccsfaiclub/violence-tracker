@@ -1,6 +1,5 @@
 import React from 'react';
 import {useEffect, useState} from "react";
-import { Map, TileLayer, Marker, Popup } from 'react-leaflet';
 import {ViolenceMap} from "./ViolenceMap";
 import {getData} from "../client";
 

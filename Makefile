@@ -1,3 +1,6 @@
+MAKEFILE_PATH = $(abspath $(lastword $(MAKEFILE_LIST)))
+ROOT_FOLDER = $(shell dirname $(MAKEFILE_PATH))
+
 docker_up:
 	docker-compose run dependencies
 
@@ -11,6 +14,5 @@ fe_dev_up: fe_install
 	cd frontend && npm start
 
 app_up:
-	export PYTHONPATH=$(pwd)
-	python backend/main.py
+	PYTHONPATH="$(ROOT_FOLDER)" python backend/main.py
 

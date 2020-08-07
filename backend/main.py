@@ -3,7 +3,6 @@ import json
 import graphene
 from flask_graphql import GraphQLView
 
-from backend import schema
 from backend.schema import Incident, Query
 from backend.app import create_app
 from backend.extensions import db
@@ -85,6 +84,38 @@ query = '''
         '''
 
 
+def geocode_cities():
+    """
+    Fetches all incidences loaded into the postgres db.
+    Loops through all incidences and geocodes each location to get a lat, long.
+    Populates the locations table with lat longs
+    :return: None
+    """
+    incidences = db.session.query(Incident).all()
+
+    for incident in incidences:
+        incident_id = incident.id
+        city = incident.city.lower().replace(' ', '+')
+        state = incident.state.lower().replace(' ', '+')
+
+        # Filter incidents without location data
+        if 'unknown' not in state:
+
+            # TODO write this as an internal endpoint rather than use requests to make the call
+            query = f'https://nominatim.openstreetmap.org/search?city={city}&state={state}&format=json'
+            reponse = requests.get(query)
+            if reponse.status_code == 200:
+                data = json.loads(reponse.text)
+                lat = data[0]['lat']
+                lon = data[0]['lon']
+
+                location = Location(incident_id=incident_id,
+                                    lat=lat,
+                                    lon=lon)
+                db.session.add(location)
+    db.session.commit()
+
+
 def run_query(query: str):
     """
     Runs a query against schema and prints the results
@@ -134,38 +165,6 @@ def run_query(query: str):
        }
     }
     '''
-
-
-def geocode_cities():
-    """
-    Fetches all incidences loaded into the postgres db.
-    Loops through all incidences and geocodes each location to get a lat, long.
-    Populates the locations table with lat longs
-    :return: None
-    """
-    incidences = db.session.query(Incident).all()
-
-    for incident in incidences:
-        incident_id = incident.id
-        city = incident.city.lower().replace(' ', '+')
-        state = incident.state.lower().replace(' ', '+')
-
-        # Filter incidents without location data
-        if 'unknown' not in state:
-
-            # TODO write this as an internal endpoint rather than use requests to make the call
-            query = f'https://nominatim.openstreetmap.org/search?city={city}&state={state}&format=json'
-            reponse = requests.get(query)
-            if reponse.status_code == 200:
-                data = json.loads(reponse.text)
-                lat = data[0]['lat']
-                lon = data[0]['lon']
-
-                location = Location(incident_id=incident_id,
-                                    lat=lat,
-                                    lon=lon)
-                db.session.add(location)
-    db.session.commit()
 
 
 if __name__ == "__main__":
