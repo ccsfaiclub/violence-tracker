@@ -15,6 +15,9 @@ fe_install:
 fe_dev_up: fe_install
 	cd frontend && npm start
 
-app_up:
-	PYTHONPATH="$(ROOT_FOLDER)" python backend/main.py
+create_and_populate_db:
+	PYTHONPATH="$(ROOT_FOLDER)" python backend/create_and_populate.py
+
+flask_up:
+	PYTHONPATH="$(ROOT_FOLDER)" FLASK_APP=app.py cd backend && flask run
 

@@ -1,8 +1,11 @@
-from flask import Flask
+import graphene
+from flask import Flask, app
 
 from backend import schema
 from backend.extensions import db
 from flask_graphql import GraphQLView
+
+from backend.schema import schema
 
 
 class BaseConfig(object):
