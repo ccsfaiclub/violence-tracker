@@ -16,8 +16,11 @@ fe_dev_up: fe_install
 	cd frontend && npm start
 
 create_and_populate_db:
-	PYTHONPATH="$(ROOT_FOLDER)" python backend/create_and_populate.py
+  PYTHONPATH="$(ROOT_FOLDER)" python backend/create_and_populate_db.py
 
 flask_up:
 	PYTHONPATH="$(ROOT_FOLDER)" FLASK_APP=app.py cd backend && flask run
+
+dump_db:
+	pg_dump -h localhost -p 5432 -U postgres postgres
 

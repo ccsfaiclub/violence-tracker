@@ -8,17 +8,14 @@ import { ViolenceApp } from "./components/ViolenceApp";
 
 function App() {
 
-  return (
-    <div className="App">
-        <Header/>
-
-        <ViolenceApp/>
-        {/*ViolenceApp calls ViolenceMap*/}
-
-        <Search/>
-        <Stats/>
-    </div>
-  );
+    return (
+        <div className="App">
+            <Header/>
+            <ViolenceApp/>
+            <Search/>
+            <Stats/>
+        </div>
+    );
 }
 
 export default App;

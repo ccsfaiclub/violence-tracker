@@ -1,5 +1,6 @@
 import graphene
 from flask import Flask, app
+from flask_cors import CORS
 
 from backend import schema
 from backend.extensions import db
@@ -21,6 +22,7 @@ class BaseConfig(object):
 
 def create_app():
     app = Flask(__name__)
+    CORS(app)
 
     app.config.from_object(BaseConfig())
 

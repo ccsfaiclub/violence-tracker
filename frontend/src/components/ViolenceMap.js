@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { Map, TileLayer, Marker, Popup } from 'react-leaflet';
 import {point} from "leaflet";
+import CardContent from "@material-ui/core/CardContent";
+import * as marker from "leaflet";
 
 export function ViolenceMap(props) {
     // Initially, position will be centered on map
@@ -15,26 +17,28 @@ export function ViolenceMap(props) {
     // If there are incidents, loop through the array, returning
     // each incident's position (for its marker), and address (for its popup text)
     if (props.incidents) {
+
+        console.log(props.incidents)
         markers = props.incidents.map(
             incident => {
-                const position = {
-                    lat: incident['point']['coordinates'][1],
-                    lng: incident['point']['coordinates'][0],
+                const p = {
+                    lat: incident.location['lat'],
+                    lng: incident.location['lon'],
                     zoom: 5
                 }
+                //position.lat = p.lat;
+                //position.lng = p.lng;
 
-                const popupText = incident['address'] + ', ' + incident['city'];
+                const popupName = incident['name'];
+                const popupLocation = incident['city'] + ', ' + incident['state'];
 
-                return (<Marker position={position}>
-                    <Popup>{popupText}</Popup>
+                return (<Marker position={p}>
+                    <Popup>{popupName} <p><strong>{popupLocation}</strong></p></Popup>
+                    {/*<Popup>{popupLocation}</Popup>*/}
                 </Marker>);
             });
-        // Assign markers for the first 100 incidents (limit can be changed)
-        markers = markers.slice(0, 100);
-        // Zoom into the first marker's position
-        position['lat'] = props.incidents[0]['point']['coordinates'][1];
-        position['lng'] = props.incidents[0]['point']['coordinates'][0];
-        position['zoom'] = 12;
+        // Assign markers for the first __ incidents (limit can be changed)
+        markers = markers.slice(0, 700);
     }
 
 
