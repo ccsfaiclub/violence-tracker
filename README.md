@@ -31,9 +31,15 @@ Fire up PostgresSQL:
 make docker_up
 ```
 
-Run the app:
+Build the database:
 ```
-make app_up
+make create_and_populate_db
+```
+
+## Running the app:
+```
+make flask_up
+make fe_dev_up
 ```
 
 Stop PostgresSQL:

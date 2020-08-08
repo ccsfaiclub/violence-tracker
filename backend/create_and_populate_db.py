@@ -22,7 +22,7 @@ def main():
 
         geocode_cities()
 
-        run_query(query)
+        # run_query(query)
 
 
 def get_data(json_file: str) -> List[Dict]:
@@ -43,7 +43,7 @@ def write_to_db():
     Note: For now, loop only adds 3 incidents; we can change this to include all incidents later
     """
     data = get_data('../police-brutality-data.json')
-    for i in range(10):
+    for i in range(len(data)):
         id = data[i]['id']
         links = data[i]['links']
         state = data[i]['state']
@@ -87,13 +87,13 @@ def get_location(city: str, state: str) -> Optional[Location]:
     response = requests.get(query)
     if response.status_code == 200:
         data = json.loads(response.text)
-        lat = data[0]['lat']
-        lon = data[0]['lon']
-        location = Location(city=city, state=state, lat=lat, lon=lon)
-        db.session.add(location)
-        return location
-    else:
-        return None
+        if data:
+            lat = data[0]['lat']
+            lon = data[0]['lon']
+            location = Location(city=city, state=state, lat=lat, lon=lon)
+            db.session.add(location)
+            return location
+    return None
 
 
 def geocode_cities():
@@ -156,31 +156,7 @@ def run_query(query: str):
                 "date":"2020-05-31",
                 "dateText":"May 31st",
                 "locationId":1
-             },
-             {
-                "id":"3",
-                "links":"[{\"url\": \"https://twitter.com/XruthxNthr/status/1266903223220097024\", \"text\": \"\"}]",
-                "state":"Nebraska",
-                "city":"Omaha",
-                "description":"A bunch of protesters peacefully sitting on the ground were shot at and maced. A group of police officers pushed these civilians on to the ground and hit them.",
-                "tags":"[\"mace\", \"spray\", \"pepper-balls\", \"protestor\"]",
-                "name":"Police Mace, shoot pepper bullets at protesters sitting on the ground",
-                "date":"2020-05-31",
-                "dateText":"May 31st",
-                "locationId":2
-             },
-             {
-                "id":"2",
-                "links":"[{\"url\": \"https://twitter.com/ChrisDunkerLJS/status/1268938853945167873\", \"text\": \"\"}, {\"url\": \"https://twitter.com/ChrisDunkerLJS/status/1268981851164684290\", \"text\": \"\"}]",
-                "state":"Nebraska",
-                "city":"Lincoln",
-                "description":"A reporter posted a picture of a tear gas canister, allegedly used in Lincoln protests. In the tweet, he states he and his photographer were tear gassed twice by police.",
-                "tags":"[\"journalist\", \"tear-gas\", \"tear-gas-canister\"]",
-                "name":"Reporter shows tear gas canister fired at him by police",
-                "date":"2020-05-31",
-                "dateText":"May 31st",
-                "locationId":1
-             },
+             }
           ]
        }
     }
