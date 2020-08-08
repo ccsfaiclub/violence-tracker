@@ -4,6 +4,7 @@ from backend import app, model
 from backend.extensions import db
 from backend.model import Incident as IncidentModel
 from backend.model import Location as LocationModel
+
 import graphene
 from graphene import relay
 from graphene_sqlalchemy import SQLAlchemyConnectionField, SQLAlchemyObjectType

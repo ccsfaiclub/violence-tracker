@@ -43,6 +43,7 @@ def write_to_db():
     Note: For now, loop only adds 3 incidents; we can change this to include all incidents later
     """
     data = get_data('../police-brutality-data.json')
+
     for i in range(len(data)):
         id = data[i]['id']
         links = data[i]['links']
