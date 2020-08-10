@@ -3,6 +3,8 @@ import { Map, TileLayer, Marker, Popup } from 'react-leaflet';
 import {point} from "leaflet";
 import CardContent from "@material-ui/core/CardContent";
 import * as marker from "leaflet";
+import {Search} from "./Search";
+import ReactLeafletSearch from "react-leaflet-search";
 
 export function ViolenceMap(props) {
     // Initially, position will be centered on map
@@ -47,12 +49,30 @@ export function ViolenceMap(props) {
             center={[position.lat, position.lng]}
             zoom={position.zoom}
             style={{width: '100%', height: '900px'}}
+
         >
             <TileLayer
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 attribution='&copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
             />
             {markers}
+
+            {/*This component adds a search bar to the top right of the page.*/}
+            {/*Users can search incidents by inputting the name of the city or state.*/}
+            {/*The map zooms to the location entered.*/}
+            <ReactLeafletSearch
+                position="topright"
+                inputPlaceholder="Search by city or state"
+                search = {
+                    [33.100745405144245, 46.48315429687501]
+                }
+                showMarker={true}
+                zoom={7}
+                showPopup={false}
+                // popUp={this.customPopup}
+                closeResultsOnClick={true}
+                openSearchOnLoad={true}
+            />
         </Map>
 
     );
