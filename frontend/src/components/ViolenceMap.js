@@ -6,7 +6,6 @@ import * as marker from "leaflet";
 import ReactLeafletSearch from "react-leaflet-search";
 import { Sidebar, Tab } from "react-leaflet-sidebarv2";
 
-
 export function ViolenceMap(props) {
     // Initially, position will be centered on map
     const position = {
@@ -115,6 +114,5 @@ export function ViolenceMap(props) {
                 </Sidebar>
             </Map>
         </div>
-
     );
 }
