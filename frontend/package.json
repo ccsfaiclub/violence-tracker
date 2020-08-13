@@ -40,6 +40,8 @@
   },
   "devDependencies": {
     "apollo-boost": "^0.4.9",
-    "graphql-tag": "^2.11.0"
+    "graphql-tag": "^2.11.0",
+    "react-leaflet-search": "^1.0.3",
+    "react-leaflet-sidebarv2": "^0.6.0"
   }
 }

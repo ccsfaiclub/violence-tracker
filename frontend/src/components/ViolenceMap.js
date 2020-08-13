@@ -1,10 +1,10 @@
-import React, { Component } from 'react';
-import { Map, TileLayer, Marker, Popup } from 'react-leaflet';
+import React, {Component, useState} from 'react';
+import {Map, TileLayer, Marker, Popup, ZoomControl} from 'react-leaflet';
 import {point} from "leaflet";
 import CardContent from "@material-ui/core/CardContent";
 import * as marker from "leaflet";
-import {Search} from "./Search";
 import ReactLeafletSearch from "react-leaflet-search";
+import { Sidebar, Tab } from "react-leaflet-sidebarv2";
 
 export function ViolenceMap(props) {
     // Initially, position will be centered on map
@@ -12,6 +12,22 @@ export function ViolenceMap(props) {
         lat: 41.15,
         lng: -96.50,
         zoom: 5,
+    }
+
+    // Sidebar
+    const [state, setState] = useState({collapsed: true,
+                                        selected: 'home'})
+
+    function onClose() {
+        setState({
+            collapsed: true
+        });
+    }
+    function onOpen(id) {
+        setState({
+            collapsed: false,
+            selected: id
+        });
     }
 
     // An array to hold location of all incidents
@@ -45,35 +61,58 @@ export function ViolenceMap(props) {
 
 
     return (
-        <Map
-            center={[position.lat, position.lng]}
-            zoom={position.zoom}
-            style={{width: '100%', height: '900px'}}
+        <div>
+            <Map
+                className="sidebar-map"
+                center={[position.lat, position.lng]}
+                zoom={position.zoom}
+                style={{height: '100vh', width: '100wh'}}
+                zoomControl={'false'}
+                // position={{'bottomright'}}
+            >
+                <TileLayer
+                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                    attribution='&copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+                />
+                {markers}
+                {/*This component adds a search bar to the top right of the page.*/}
+                {/*Users can search by city or state.*/}
+                {/*The map zooms to the location entered.*/}
+                <ReactLeafletSearch
+                    position="topright"
+                    inputPlaceholder="Search by city or state"
+                    search = {
+                        [33.100745405144245, 46.48315429687501]
+                    }
+                    showMarker={true}
+                    zoom={7}
+                    showPopup={false}
+                    // popUp={ .customPopup}
+                    closeResultsOnClick={true}
+                    openSearchOnLoad={true}
+                />
 
-        >
-            <TileLayer
-                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                attribution='&copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-            />
-            {markers}
+                <ZoomControl position="topright" />
 
-            {/*This component adds a search bar to the top right of the page.*/}
-            {/*Users can search incidents by inputting the name of the city or state.*/}
-            {/*The map zooms to the location entered.*/}
-            <ReactLeafletSearch
-                position="topright"
-                inputPlaceholder="Search by city or state"
-                search = {
-                    [33.100745405144245, 46.48315429687501]
-                }
-                showMarker={true}
-                zoom={7}
-                showPopup={false}
-                // popUp={this.customPopup}
-                closeResultsOnClick={true}
-                openSearchOnLoad={true}
-            />
-        </Map>
+                <Sidebar
+                    id="sidebar"
+                    collapsed={state.collapsed}
+                    selected={state.selected}
+                    onOpen={onOpen}
+                    onClose={onClose}
 
+                >
+                    <Tab id="home" header="VIOLENCE TRACKER" icon="fa fa-bars">
+                        <p>View incidents of police brutality in the U.S.</p>
+                    </Tab>
+                    <Tab id="info" header="Stats" icon="fa fa-area-chart">
+                        <p>View dashboard</p>
+                    </Tab>
+                    <Tab id="settings" header="Report" icon="fa fa-exclamation-triangle">
+                        <p>Report an incident</p>
+                    </Tab>
+                </Sidebar>
+            </Map>
+        </div>
     );
 }

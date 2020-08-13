@@ -24,3 +24,4 @@ flask_up:
 dump_db:
 	pg_dump -h localhost -p 5432 -U postgres postgres
 
+
