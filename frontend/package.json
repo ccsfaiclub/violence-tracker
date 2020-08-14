@@ -6,16 +6,19 @@
     "@apollo/react-hooks": "^4.0.0",
     "@material-ui/core": "^4.11.0",
     "@material-ui/icons": "^4.9.1",
+    "@material-ui/system": "^4.9.14",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.5.0",
     "@testing-library/user-event": "^7.2.1",
+    "classnames": "^2.2.6",
     "leaflet": "^1.6.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-leaflet": "^2.7.0",
     "react-leaflet-search": "^1.0.3",
     "react-scripts": "3.4.1",
-    "react-sidebar": "^3.0.2"
+    "react-sidebar": "^3.0.2",
+    "react-toolbox": "^2.0.0-beta.13"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -41,6 +44,8 @@
   "devDependencies": {
     "apollo-boost": "^0.4.9",
     "graphql-tag": "^2.11.0",
+    "prop-types": "^15.7.2",
+    "react-css-themr": "^2.1.2",
     "react-leaflet-search": "^1.0.3",
     "react-leaflet-sidebarv2": "^0.6.0"
   }
