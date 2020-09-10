@@ -182,8 +182,8 @@ export function ViolenceMap(props) {
                     {/*<Popup>{popupLocation}</Popup>*/}
                 </Marker>);
             });
-        // Assign markers for the first __ incidents (limit can be changed)
-        markers = markers.slice(0, 700);
+
+        markers = markers;
     }
 
 

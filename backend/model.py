@@ -32,3 +32,5 @@ class Location(db.Model):
 
     lat = db.Column(db.Float)
     lon = db.Column(db.Float)
+
+
