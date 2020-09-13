@@ -11,6 +11,8 @@ import Typography from "@material-ui/core/Typography";
 import Card from "@material-ui/core/Card";
 import {deepOrange} from "@material-ui/core/colors";
 
+import MarkerClusterGroup from "react-leaflet-markercluster";
+
 
 const styles = muiBaseTheme => ({
     card: {
@@ -201,7 +203,10 @@ export function ViolenceMap(props) {
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                     attribution='&copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
                 />
-                {markers}
+                <MarkerClusterGroup>
+                    {markers}
+                </MarkerClusterGroup>
+
                 {/*This component adds a search bar to the top right of the page.*/}
                 {/*Users can search by city or state.*/}
                 {/*The map zooms to the location entered.*/}
