@@ -18,6 +18,7 @@
     "react-css-themr": "^2.1.2",
     "react-dom": "^16.13.1",
     "react-leaflet": "^2.7.0",
+    "react-leaflet-markercluster": "^2.0.0",
     "react-leaflet-search": "^1.0.3",
     "react-leaflet-sidebarv2": "^0.6.0",
     "react-scripts": "^3.4.3",
