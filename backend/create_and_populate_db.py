@@ -27,7 +27,7 @@ def main():
 
 def download_write_file() -> str:
     """
-    Reads URL and downloads it
+    Given a URL, retrieves and writes contents to json file.
     """
     url = 'https://raw.githubusercontent.com/2020PB/police-brutality/data_build/all-locations-v2.json'
     r = requests.get(url)
