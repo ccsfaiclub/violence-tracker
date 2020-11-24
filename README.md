@@ -1,5 +1,5 @@
 # violence-tracker
-![violence-tracker map](https://user-images.githubusercontent.com/18561714/100044274-1db25b00-2dc4-11eb-9656-50ff0306854b.png")
+![violence-tracker](https://user-images.githubusercontent.com/18561714/100044274-1db25b00-2dc4-11eb-9656-50ff0306854b.png)
 
 
 ### Prerequisites
