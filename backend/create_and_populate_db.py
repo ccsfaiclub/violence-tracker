@@ -25,6 +25,22 @@ def main():
         # run_query(query)
 
 
+def download_write_file() -> str:
+    """
+    Reads URL and downloads it
+    """
+    url = 'https://raw.githubusercontent.com/2020PB/police-brutality/data_build/all-locations-v2.json'
+    r = requests.get(url)
+
+    json_object = json.dumps(r.json())
+
+    data_file = 'police-brutality-data-all-locations.json'
+
+    with open(data_file, 'w') as outfile:
+        outfile.write(json_object)
+    return data_file
+
+
 def get_data(json_file: str) -> List[Dict]:
     """
     Reads JSON file, parses the incidents data,
@@ -42,7 +58,8 @@ def write_to_db():
 
     Note: For now, loop only adds 3 incidents; we can change this to include all incidents later
     """
-    data = get_data('../police-brutality-data.json')
+    file = download_write_file()
+    data = get_data(file)
 
     for i in range(len(data)):
         id = data[i]['id']
