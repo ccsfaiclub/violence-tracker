@@ -1,4 +1,5 @@
 # violence-tracker
+![Screenshot](violence-tracker-map.png)
 
 ### Prerequisites
 You will need to have these programs installed in your environment:
@@ -46,5 +47,3 @@ Stop PostgresSQL:
 ```
 make docker_down
 ```
-
-
