@@ -18,7 +18,7 @@ def main():
     with app.app_context():
         db.create_all()
 
-        write_to_db()
+        read_from_file_and_write_to_db()
 
         geocode_cities()
 
@@ -51,16 +51,21 @@ def get_data(json_file: str) -> List[Dict]:
         return data['data']
 
 
-def write_to_db():
+def read_from_file_and_write_to_db():
     """
-    Gets the data, and using a loop, populates the db with
-    each incident added as a row in the Incidents table
-
-    Note: For now, loop only adds 3 incidents; we can change this to include all incidents later
+    Downloads the JSON file, parses the data, and writes it to the DB
     """
     file = download_write_file()
     data = get_data(file)
 
+    return write_to_db(data)
+
+
+def write_to_db(data: List[Dict]):
+    """
+    Loops through incidents data and populates the db with
+    each incident added as a row in the Incidents table
+    """
     for i in range(len(data)):
         id = data[i]['id']
         links = data[i]['links']

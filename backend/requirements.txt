@@ -6,3 +6,4 @@ psycopg2-binary==2.8.2
 graphene-sqlalchemy==2.0
 requests==2.24.0
 Flask-GraphQL==2.0.1
+pytest-cov==2.10.1

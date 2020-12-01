@@ -1,5 +1,5 @@
 import graphene
-from flask import Flask, app
+from flask import Flask
 from flask_cors import CORS
 
 from backend import schema
@@ -9,7 +9,7 @@ from flask_graphql import GraphQLView
 from backend.schema import schema
 
 
-class BaseConfig(object):
+class BaseConfig:
     """Return config for Flask"""
     DB_HOST = 'localhost'
     DB_PORT = 5432
@@ -20,11 +20,11 @@ class BaseConfig(object):
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 
-def create_app():
+def create_app(config=BaseConfig()):
     app = Flask(__name__)
     CORS(app)
 
-    app.config.from_object(BaseConfig())
+    app.config.from_object(config)
 
     # initialize SqlAlchemy with flask config
     db.init_app(app)
@@ -35,3 +35,19 @@ def create_app():
     )
 
     return app
+
+# def create_app():
+#     app = Flask(__name__)
+#     CORS(app)
+#
+#     app.config.from_object(BaseConfig())
+#
+#     # initialize SqlAlchemy with flask config
+#     db.init_app(app)
+#
+#     # this will add /graphql and /graphiql endpoints to app
+#     app.add_url_rule(
+#         "/graphql", view_func=GraphQLView.as_view("graphql", schema=schema, graphiql=True)
+#     )
+#
+#     return app

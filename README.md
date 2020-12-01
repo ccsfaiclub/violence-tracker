@@ -6,10 +6,11 @@
 You will need to have these programs installed in your environment:
  * [Docker](https://docs.docker.com/get-docker/)
  * [Docker-compose](https://docs.docker.com/compose/install/)
- * [Python 3.7+](https://www.python.org/downloads/)
  * [GNU Make](https://www.gnu.org/software/make/)
+ * [Python 3.7+](https://www.python.org/downloads/)
+ * [npm 6.14.7](https://www.npmjs.com/package/npm/v/6.14.7)
 
-## Getting started 
+## Getting started: 
 
 Get the project code:
 ```
@@ -47,4 +48,9 @@ make fe_dev_up
 Stop PostgresSQL:
 ```
 make docker_down
+```
+
+## Testing the app:
+```
+make backend_tests
 ```
