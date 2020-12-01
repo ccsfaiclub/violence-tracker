@@ -24,4 +24,5 @@ flask_up:
 dump_db:
 	pg_dump -h localhost -p 5432 -U postgres postgres
 
-
+backend_tests:
+	cd backend/tests && $(BACKEND_FLAGS) pytest --cov=backend --cov-report html:htmlcov
