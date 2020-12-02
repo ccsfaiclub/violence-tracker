@@ -7,6 +7,7 @@ def add_incident(app):
     """
     Helper function to load an incident into the DB
     """
+
     with app.app_context():
         incident1 = Incident(external_id='1',
                              links=[],
@@ -18,6 +19,7 @@ def add_incident(app):
                              city="Las Vegas",
                              state="Nevada",
                              location=Location(city='Las Vegas', state='Nevada'))
+
     db.session.add(incident1)
     db.session.commit()
 
@@ -45,6 +47,7 @@ def test_get_incidents(app, client):
                 """
 
         incidents_count = db.session.query(Incident).count()
+
 
     # Then: We should get back 1 result
     assert incidents_count == 1
