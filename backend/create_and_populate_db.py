@@ -157,33 +157,12 @@ query = '''
 
 def run_query(query: str):
     """
-    Runs a query against schema and prints the results
+    Runs a query against schema and returns the results
     """
     schema = graphene.Schema(query=Query)
     result = schema.execute(query, context_value={'session': db})
-    print(result)
-    '''
-    SAMPLE OUTPUT 
-    Formatted JSON Data
-    {
-       "data":{
-          "incidents":[
-             {
-                "id":"1",
-                "links":"[{\"url\": \"https://journalstar.com/news/local/crime-and-courts/watch-now-arrested-lincoln-protester-felt-violated-we-did-nothing-wrong-but-exercise-our-constitutional/article_aa0216d0-b79b-524b-9b6a-5db44a2d49dc.html\", \"text\": \"\"}, {\"url\": \"https://twitter.com/greg_doucette/status/1268772480153460736\", \"text\": \"\"}]",
-                "state":"Nebraska",
-                "city":"Lincoln",
-                "description":"A crowd gathers around a woman who is being arrested. After she is pulled away, police give a dispersal order. Protestors comply, but appear to exchange words with officers while walking away. Police then shout that they are under arrest, shoving protestors to the ground and kneeling on them to make arrests.",
-                "tags":"[\"arrest\", \"shove\", \"knee\", \"protestor\"]",
-                "name":"Police arrest protestors leaving scene",
-                "date":"2020-05-31",
-                "dateText":"May 31st",
-                "locationId":1
-             }
-          ]
-       }
-    }
-    '''
+
+    return result
 
 
 if __name__ == "__main__":

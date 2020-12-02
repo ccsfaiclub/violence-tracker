@@ -51,3 +51,6 @@ def test_load_data_into_db(app):
         # Then: The Locations table will contain a new row for the incident's location
         rows = db.session.query(Location).count()
         assert rows == 1
+
+
+
