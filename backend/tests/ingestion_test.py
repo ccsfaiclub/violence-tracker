@@ -52,5 +52,3 @@ def test_load_data_into_db(app):
         rows = db.session.query(Location).count()
         assert rows == 1
 
-
-
