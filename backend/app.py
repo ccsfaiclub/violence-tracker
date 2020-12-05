@@ -26,18 +26,3 @@ def create_app(config=BaseConfig()):
 
     return app
 
-# def create_app():
-#     app = Flask(__name__)
-#     CORS(app)
-#
-#     app.config.from_object(BaseConfig())
-#
-#     # initialize SqlAlchemy with flask config
-#     db.init_app(app)
-#
-#     # this will add /graphql and /graphiql endpoints to app
-#     app.add_url_rule(
-#         "/graphql", view_func=GraphQLView.as_view("graphql", schema=schema, graphiql=True)
-#     )
-#
-#     return app

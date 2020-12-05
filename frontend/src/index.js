@@ -8,7 +8,7 @@ import { ApolloProvider } from '@apollo/react-hooks';
 
 // Connects React to Apollo client
 const client = new ApolloClient({
-    uri: 'http://localhost:5000/graphql'
+    uri: `http://${window.location.hostname}:5001/graphql`
 })
 
 ReactDOM.render(

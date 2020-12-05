@@ -19,7 +19,10 @@ create_and_populate_db:
 	PYTHONPATH="$(ROOT_FOLDER)" python backend/create_and_populate_db.py
 
 flask_up:
-	PYTHONPATH="$(ROOT_FOLDER)" FLASK_APP=app.py cd backend && flask run
+	PYTHONPATH="$(ROOT_FOLDER)" FLASK_APP=app.py cd backend && flask run --port 5001
+
+flask_prod_up:
+	PYTHONPATH="$(ROOT_FOLDER)" FLASK_APP=app.py cd backend && flask run --host=0.0.0.0 --port 5001
 
 dump_db:
 	pg_dump -h localhost -p 5432 -U postgres postgres
