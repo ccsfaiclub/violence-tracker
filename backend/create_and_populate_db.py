@@ -16,6 +16,7 @@ def main():
     app = create_app()
 
     with app.app_context():
+        db.drop_all()
         db.create_all()
 
         read_from_file_and_write_to_db()

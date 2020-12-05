@@ -1,18 +1,22 @@
 from sqlalchemy.dialects.postgresql import JSONB
 
+from backend.config import BaseConfig
 from backend.extensions import db
 
 
 class Incident(db.Model):
     __tablename__ = 'incidents'
 
+    # Prefer JSONB if we are using Postgres b/c it's a faster, binary, prettier format
+    _JSON_COLUMN_TYPE = JSONB if 'postgresql' in BaseConfig.SQLALCHEMY_DATABASE_URI else db.JSON
+
     id = db.Column(db.Integer, primary_key=True)
     external_id = db.Column(db.String)
-    links = db.Column(JSONB)
+    links = db.Column(_JSON_COLUMN_TYPE)
     state = db.Column(db.String)
     city = db.Column(db.String)
     description = db.Column(db.String)
-    tags = db.Column(JSONB)
+    tags = db.Column(_JSON_COLUMN_TYPE)
     name = db.Column(db.String, nullable=False)
     date = db.Column(db.String)
     date_text = db.Column(db.String)
