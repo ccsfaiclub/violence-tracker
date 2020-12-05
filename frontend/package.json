@@ -21,7 +21,7 @@
     "react-leaflet-markercluster": "^2.0.0",
     "react-leaflet-search": "^1.0.3",
     "react-leaflet-sidebarv2": "^0.6.0",
-    "react-scripts": "^3.4.3",
+    "react-scripts": "^4.0.1",
     "react-sidebar": "^3.0.2",
     "react-toolbox": "^2.0.0-beta.13",
     "styled-components": "^5.2.0"
